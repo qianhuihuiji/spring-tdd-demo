@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -15,6 +15,8 @@
     <description>spring-tdd-demo</description>
     <properties>
         <java.version>17</java.version>
+        <java-jwt.version>4.4.0</java-jwt.version>
+        <mysql-connector.version>8.0.33</mysql-connector.version>
     </properties>
     <dependencies>
         <dependency>
@@ -53,7 +55,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.33</version>
+            <version>${mysql.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -63,6 +65,34 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <!-- spring security 安全框架 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>${java-jwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.12.1</version>
+        </dependency>
+        <!-- hutool工具类-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.3.3</version>
+        </dependency>
+        <!-- 帮助我们创建表结构 -->
+        <!-- flyway 从 8.2.0之后将mysql的支持抽取程 flyway-mysql 插件，必须单独引入，不能只引入 flyway-core-->
+        <!-- 这里 flyway-mysql 已经引用了flyway-core -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-mysql</artifactId>
         </dependency>
 
         <!--   test 相关-->
@@ -128,6 +158,34 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!--配置flywaydb的maven插件-->
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>${flyway.version}</version>
+                <!--插件需要配置mysql-connector-->
+                <dependencies>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>${mysql.version}</version>
+                    </dependency>
+                </dependencies>
+                <!--配置信息-->
+
+                <configuration>
+                    <!--配置用户连接地址-->
+                    <url>jdbc:mysql://127.0.0.1:3306/zhihu?characterEncoding=utf8</url>
+                    <user>root</user>
+                    <password>root</password>
+                    <!--配置sql脚本的保存位置-->
+                    <locations>
+                        <location>filesystem:src/main/resources/db/migration</location>
+                    </locations>
+                    <!--配置baseline版本信息-->
+                    <baselineVersion>1.0.0</baselineVersion>
                 </configuration>
             </plugin>
         </plugins>
