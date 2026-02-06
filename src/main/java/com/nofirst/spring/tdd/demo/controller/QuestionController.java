@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,5 +37,16 @@ public class QuestionController {
                                                     @RequestParam @NotNull Integer pageSize) {
         PageInfo<QuestionVo> questionPage = questionService.index(pageIndex, pageSize);
         return CommonResult.success(questionPage);
+    }
+
+    /**
+     * Show question vo.
+     *
+     * @param id the id
+     * @return the question vo
+     */
+    @GetMapping("/questions/{id}")
+    public QuestionVo show(@PathVariable Integer id) {
+        return questionService.show(id);
     }
 }

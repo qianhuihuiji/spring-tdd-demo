@@ -20,4 +20,5 @@ public interface QuestionService {
      */
     PageInfo<QuestionVo> index(Integer pageIndex, Integer pageSize);
 
+    QuestionVo show(Integer id);
 }

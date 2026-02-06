@@ -2,6 +2,7 @@ package com.nofirst.spring.tdd.demo.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.nofirst.spring.tdd.demo.exception.QuestionNotExistedException;
 import com.nofirst.spring.tdd.demo.mbg.mapper.QuestionMapper;
 import com.nofirst.spring.tdd.demo.model.vo.QuestionVo;
 import com.nofirst.spring.tdd.demo.service.QuestionService;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The type Question service.
@@ -46,5 +48,20 @@ public class QuestionServiceImpl implements QuestionService {
         pageResult.setPageSize(questionPageInfo.getPageSize());
         pageResult.setList(result);
         return pageResult;
+    }
+
+    @Override
+    public QuestionVo show(Integer id) {
+        Question question = questionMapper.selectByPrimaryKey(id);
+        if (Objects.isNull(question)) {
+            throw new QuestionNotExistedException();
+        }
+        QuestionVo questionVo = new QuestionVo();
+        questionVo.setId(question.getId());
+        questionVo.setUserId(question.getUserId());
+        questionVo.setTitle(question.getTitle());
+        questionVo.setContent(question.getContent());
+
+        return questionVo;
     }
 }
